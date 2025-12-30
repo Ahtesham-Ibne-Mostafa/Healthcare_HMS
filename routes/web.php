@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+// routes/web.php
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 Route::get('/', function () {
     if (Auth::check()) {

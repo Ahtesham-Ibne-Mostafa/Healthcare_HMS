@@ -102,9 +102,41 @@
             background-color: #003366;
             border-color: #003366;
         }
-        .btn-primary:hover {
-            background-color: #002244; /* slightly darker blue on hover */
+.image-square {
+  width: 300px;   /* bigger square */
+  height: 300px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.image-square img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.package-card-bg {
+  background-color: #003366; /* deep blue theme */
+  border-radius: 12px;
+  padding-top: 10px;
+}
+.package-card-bg .card-body {
+  color: white;
+}
+.btn-purple {
+  background-color: #6f42c1;
+  color: white;
+  border-radius: 25px;
+  padding: 8px 20px;
+}
+.btn-purple:hover {
+  background-color: #5a379e;
+}
+
+        .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
+
     </style>
 
 
@@ -183,6 +215,62 @@
             </div>
         </div>
     </div>
+
+<!-- Health Check Packages Section -->
+<div class="container mt-5 px-4">
+  <h2 class="text-center mb-4" style="color:#003366;">Health Check Packages</h2>
+  <div class="row g-4 justify-content-center">
+    @php
+      $packages = [
+        ['title' => 'Executive Health Check', 'subtitle' => 'Male/Female', 'image' => 'executive.jpg'],
+        ['title' => 'Heart Check', 'subtitle' => 'For Men', 'image' => 'heart-men.jpg'],
+        ['title' => 'Heart Check', 'subtitle' => 'For Women', 'image' => 'heart-women.jpg'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Men Above 45', 'image' => 'body-men-above.jpg'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Men Below 45', 'image' => 'body-men-below.jpg'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Women Above 45', 'image' => 'body-women-above.jpg'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Women Below 45', 'image' => 'body-women-below.jpg'],
+        ['title' => 'General Health Check', 'subtitle' => 'Male Below 40', 'image' => 'general-male.jpg'],
+        // Extra packages (hidden initially)
+        ['title' => 'Diabetes Care Package', 'subtitle' => '', 'image' => 'diabetes.jpg'],
+        ['title' => 'Cancer Screening Package', 'subtitle' => '', 'image' => 'cancer.jpg'],
+        ['title' => 'Senior Citizen Health Package', 'subtitle' => '', 'image' => 'senior.jpg'],
+        ['title' => 'Women Wellness Package', 'subtitle' => '', 'image' => 'women-wellness.jpg'],
+      ];
+    @endphp
+
+    @foreach($packages as $index => $package)
+      <div class="col-lg-3 col-md-4 col-sm-6 package-card {{ $index >= 8 ? 'd-none extra-package' : '' }}">
+        <div class="card h-100 text-center shadow-sm package-card-bg">
+          <!-- Bigger square image -->
+          <div class="image-square mx-auto mt-3">
+            <img src="{{ asset('images/packages/'.$package['image']) }}" alt="{{ $package['title'] }}">
+          </div>
+          <div class="card-body">
+            <h6 class="card-title mb-1 text-white">{{ $package['title'] }}</h6>
+            @if($package['subtitle'])
+              <p class="text-light small mb-2">{{ $package['subtitle'] }}</p>
+            @endif
+            <a href="#" class="btn btn-outline-light btn-sm mt-2">See Package</a>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <div class="text-center mt-4">
+    <button id="viewAllBtn" class="btn btn-purple">View All Packages</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById('viewAllBtn').addEventListener('click', function() {
+    document.querySelectorAll('.extra-package').forEach(function(card) {
+      card.classList.remove('d-none');
+    });
+    this.style.display = 'none'; // hide button after expanding
+  });
+</script>
+
 
 
    <!-- Footer Section -->

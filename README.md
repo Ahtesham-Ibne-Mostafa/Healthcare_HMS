@@ -58,175 +58,62 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-🚀 Quick Installation Method (Recommended)
+# ===== FIRST TRY (Laravel Installer + Livewire) =====
 
-1. Install Laravel Installer Globally
-   bash
-   composer global require laravel/installer
-2. Create New Laravel Project
-   bash
-   laravel new healthcare-hms
-3. Project Configuration Steps
-   Follow these prompts:
+composer global require laravel/installer
 
-Starter Kit Selection:
+laravel new healthcare-hms
 
-text
-Which starter kit would you like to install? [None]:
-[none ] None
-[react ] React
-[vue ] Vue
-[livewire] Livewire
+# Selected options during setup:
 
-> livewire
-> Authentication Provider:
+# Starter Kit: Livewire
 
-text
-Which authentication provider do you prefer? [Laravel's built-in authentication]:
-[laravel] Laravel's built-in authentication
-[workos ] WorkOS (Requires WorkOS account)
-[none ] No authentication scaffolding
+# Auth Provider: Laravel built-in authentication
 
-> laravel
-> Laravel Volt (Optional):
+# Laravel Volt: Yes
 
-text
-Would you like to use Laravel Volt? (yes/no) [yes]:
+# Testing Framework: Pest
 
-> yes
-> Testing Framework:
+# Laravel Boost: Yes
 
-text
-Which testing framework do you prefer? [Pest]:
-[0] Pest
-[1] PHPUnit
+# Run npm install & build: Yes
 
-> 0
-> Laravel Boost (AI Coding Assistant):
+composer require spatie/laravel-permission
 
-text
-Do you want to install Laravel Boost to improve AI assisted coding? (yes/no) [yes]:
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 
-> yes
-> Build Frontend Assets:
+php artisan migrate
 
-text
-Would you like to run npm install and npm run build? (yes/no) [yes]:
+php artisan db:seed
 
-> yes 4. Install Laravel Permission Package
-> bash
-> composer require spatie/laravel-permission
-> php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-> php artisan migrate 5. Seed Database and Start Server
-> bash
-> php artisan db:seed
-> php artisan serve
-> 🔄 Alternative Installation Method
+php artisan serve
 
-1. Create Laravel Project Directly
-   bash
-   composer create-project laravel/laravel healthcare-hms
-   cd healthcare-hms
-2. Environment Setup
-   bash
-   copy .env.example .env # Windows
+# ===== SECOND TRY (Manual Setup with Composer) =====
 
-# OR for Linux/Mac:
+composer create-project laravel/laravel healthcare-hms
 
-# cp .env.example .env
+cd healthcare-hms
 
-php artisan key:generate 3. Database Configuration
-Edit .env file:
+copy .env.example .env
 
-env
+php artisan key:generate
+
+# Database configuration (.env)
+
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=healthcare_hms
 DB_USERNAME=root
-DB_PASSWORD= 4. Run Database Migrations
-bash
-php artisan migrate 5. Install Required Packages
-bash
-composer require laravel/fortify
-composer require spatie/laravel-permission 6. Publish Configuration Files
-bash
-php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" 7. Final Database Migration
-bash
+DB_PASSWORD=
+
 php artisan migrate
-📝 Post-Installation Steps
 
-1. Start Development Server
-   bash
-   php artisan serve
-   Server will run at: http://localhost:8000
+composer require laravel/fortify
 
-2. Verify Installation
-   Visit http://localhost:8000 in your browser
+composer require spatie/laravel-permission
 
-You should see the Laravel welcome page
+php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 
-Register/Login functionality should work
-
-3. Additional Configuration (Optional)
-   bash
-
-# Install frontend dependencies
-
-npm install
-
-# Build assets
-
-npm run build
-
-# Run tests
-
-php artisan test
-
-# Clear cache
-
-php artisan optimize:clear
-🗂️ Project Structure Highlights
-text
-healthcare-hms/
-├── app/
-│ ├── Http/
-│ ├── Livewire/ # Livewire components
-│ ├── Models/
-│ └── Providers/
-├── resources/
-│ ├── views/
-│ └── css/
-├── database/
-│ ├── migrations/
-│ └── seeders/
-└── config/
-├── permission.php
-└── fortify.php
-🛠️ Troubleshooting
-Common Issues & Solutions:
-Composer Errors:
-
-bash
-composer clear-cache
-composer install --no-scripts
-Permission Issues:
-
-bash
-chmod -R 775 storage bootstrap/cache
-Database Connection:
-
-Ensure MySQL is running
-
-Verify database credentials in .env
-
-Create database manually if needed:
-
-sql
-CREATE DATABASE healthcare_hms;
-Migration Errors:
-
-bash
-php artisan migrate:fresh
-php artisan db:seed
+php artisan migrate

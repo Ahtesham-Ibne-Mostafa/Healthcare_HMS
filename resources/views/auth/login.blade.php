@@ -65,8 +65,21 @@
     </div>
     <div class="p-4">
       <h4 class="mb-4 text-center">Login to Your Account</h4>
-      <form method="POST" action="{{ route('login') }}">
-        @csrf
+            @if($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+      @endif
+
+      @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+      @endif
+
+      <form method="POST" action="{{ url('/login') }}">
+          @csrf
+
         <div class="mb-3">
           <label for="email" class="form-label">Email Address</label>
           <input id="email" type="email" class="form-control" name="email" required autofocus>

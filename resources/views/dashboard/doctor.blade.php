@@ -54,7 +54,10 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">Healthcare HMS</a>
+            <a class="navbar-brand fw-bold" href="#">
+        <img src="{{ asset('images/logo.jpg') }}" alt="Hospital Logo" style="max-height:30px;" class="me-2">
+        Sunrise Medical Center
+      </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-outline-light">Logout</button>

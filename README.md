@@ -11,13 +11,13 @@
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -33,14 +33,14 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ### Premium Partners
 
--   **[Vehikl](https://vehikl.com)**
--   **[Tighten Co.](https://tighten.co)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Redberry](https://redberry.international/laravel-development)**
--   **[Active Logic](https://activelogic.com)**
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
 ## Contributing
 
@@ -57,63 +57,3 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# ===== FIRST TRY (Laravel Installer + Livewire) =====
-
-composer global require laravel/installer
-
-laravel new healthcare-hms
-
-# Selected options during setup:
-
-# Starter Kit: Livewire
-
-# Auth Provider: Laravel built-in authentication
-
-# Laravel Volt: Yes
-
-# Testing Framework: Pest
-
-# Laravel Boost: Yes
-
-# Run npm install & build: Yes
-
-composer require spatie/laravel-permission
-
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-
-php artisan migrate
-
-php artisan db:seed
-
-php artisan serve
-
-# ===== SECOND TRY (Manual Setup with Composer) =====
-
-composer create-project laravel/laravel healthcare-hms
-
-cd healthcare-hms
-
-copy .env.example .env
-
-php artisan key:generate
-
-# Database configuration (.env)
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=healthcare_hms
-DB_USERNAME=root
-DB_PASSWORD=
-
-php artisan migrate
-
-composer require laravel/fortify
-
-composer require spatie/laravel-permission
-
-php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-
-php artisan migrate

@@ -65,7 +65,13 @@
     </div>
     <div class="p-4">
       <h4 class="mb-4 text-center">Create Your Account</h4>
-      <form method="POST" action="{{ route('register') }}">
+      @if($errors->any())
+        <div class="alert alert-danger">
+            {{ $errors->first() }}
+        </div>
+      @endif
+
+      <form method="POST" action="{{ url('/register') }}">
         @csrf
         <div class="mb-3">
           <label for="name" class="form-label">Full Name</label>

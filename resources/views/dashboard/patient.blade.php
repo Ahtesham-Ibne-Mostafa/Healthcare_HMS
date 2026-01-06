@@ -176,23 +176,28 @@
     <div class="col-md-9">
       <h1 class="dashboard-title mb-4">Patient Dashboard</h1>
       <div class="row g-4">
-        <!-- Appointments -->
-        <div class="col-md-4">
-          <div class="card h-100 dashboard-card text-center">
-            <div class="card-body">
-              <div class="card-icon mb-3">📅</div>
-              <h5 class="card-title">Appointments</h5>
-              <p class="card-text">Coming soon...</p>
-            </div>
+      <!-- Appointments -->
+      <div class="col-md-4">
+        <div class="card h-100 dashboard-card text-center">
+          <div class="card-body">
+            <div class="card-icon mb-3">📅</div>
+            <h5 class="card-title">Appointments</h5>
+            <p class="card-text">Manage your appointments.</p>
+            <button class="btn btn-outline-light btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#patientAppointmentsModal">
+              View / Book
+            </button>
           </div>
         </div>
+      </div>
+
         <!-- Prescriptions -->
         <div class="col-md-4">
           <div class="card h-100 dashboard-card text-center">
             <div class="card-body">
               <div class="card-icon mb-3">💊</div>
               <h5 class="card-title">Prescriptions</h5>
-              <p class="card-text">View and download prescriptions.</p>
+              <p class="card-text">View prescriptions sent by doctors.</p>
+              <button class="btn btn-outline-light btn-sm mt-2" id="openMyPrescriptionsBtn">View Prescriptions</button>
             </div>
           </div>
         </div>
@@ -223,12 +228,17 @@
               <div class="card-icon mb-3">🩸</div>
               <h5 class="card-title">Blood Donor System</h5>
               <p class="card-text">Register or request emergency blood.</p>
+              <button class="btn btn-outline-light btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#bloodDonorModal">
+                Open
+              </button>
             </div>
           </div>
         </div>
+
         <!-- AI Symptom Checker -->
+        <!-- AI Symptom Checker Card -->
         <div class="col-md-4">
-          <div class="card h-100 dashboard-card text-center">
+          <div class="card h-100 dashboard-card text-center" data-bs-toggle="modal" data-bs-target="#symptomCheckerModal">
             <div class="card-body">
               <div class="card-icon mb-3">🤖</div>
               <h5 class="card-title">AI Symptom Checker</h5>
@@ -236,10 +246,37 @@
             </div>
           </div>
         </div>
+
+        <!-- Chat Modal -->
+        <div class="modal fade" id="symptomCheckerModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">AI Symptom Checker</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div id="chatWindow" class="mb-3" style="height:300px; overflow-y:auto; border:1px solid #ddd; padding:10px;"></div>
+                <div class="input-group">
+                  <input type="text" id="symptomInput" class="form-control" placeholder="Describe your symptoms..." required>
+                  <button class="btn btn-primary" type="button" id="askButton">Ask</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
       </div>
       </div>
     </div>
   </div>
+
+
+
+
+
+
 
   <!-- Profile Modal -->
   <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -333,8 +370,79 @@
     </div>
   </div>
 
+  <!-- Patient Prescriptions Modal -->
+  <div class="modal fade" id="patientPrescriptionsModal" tabindex="-1" aria-labelledby="patientPrescriptionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="patientPrescriptionsModalLabel">Your Prescriptions</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="patientPrescriptionsBody">
+          @if(isset($prescriptions) && $prescriptions->count())
+            <ul class="list-group">
+              @foreach($prescriptions as $pres)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="small text-muted">{{ $pres->created_at->format('d M Y H:i') }}</div>
+                    <strong>From: <a href="#" class="view-prescription-link" data-pres='@json($pres)'>Dr. {{ $pres->doctor->user->name ?? 'Unknown' }}</a></strong>
+                  </div>
+                </li>
+              @endforeach
+            </ul>
+          @else
+            <p>No prescriptions yet.</p>
+          @endif
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Single Prescription Modal -->
+  <div class="modal fade" id="viewPrescriptionModal" tabindex="-1" aria-labelledby="viewPrescriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-secondary text-white">
+          <h5 class="modal-title" id="viewPrescriptionModalLabel">Prescription</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="viewPrescriptionBody">
+          <div class="text-center">Select a prescription to view.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('openMyPrescriptionsBtn');
+      if (btn) {
+        btn.addEventListener('click', function () {
+          var modal = new bootstrap.Modal(document.getElementById('patientPrescriptionsModal'));
+          modal.show();
+        });
+      }
+
+      // Attach click handlers for view links
+      document.querySelectorAll('.view-prescription-link').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          var pres = JSON.parse(this.getAttribute('data-pres'));
+          var body = document.getElementById('viewPrescriptionBody');
+          var html = '<p><strong>Doctor:</strong> ' + (pres.doctor && pres.doctor.user ? pres.doctor.user.name : 'Unknown') + '</p>';
+          html += '<p class="small text-muted">' + (pres.created_at || '') + '</p>';
+          html += '<hr>';
+          html += '<pre style="white-space:pre-wrap;">' + (pres.content || '') + '</pre>';
+          body.innerHTML = html;
+          var vm = new bootstrap.Modal(document.getElementById('viewPrescriptionModal'));
+          vm.show();
+        });
+      });
+    });
+  </script>
 
 
 <!-- Health Check Packages Section -->
@@ -343,35 +451,39 @@
   <div class="row g-4 justify-content-center">
     @php
       $packages = [
-        ['title' => 'Executive Health Check', 'subtitle' => 'Male/Female', 'image' => 'executive.jpg'],
-        ['title' => 'Heart Check', 'subtitle' => 'For Men', 'image' => 'heart-men.jpg'],
-        ['title' => 'Heart Check', 'subtitle' => 'For Women', 'image' => 'heart-women.jpg'],
-        ['title' => 'Whole Body Check', 'subtitle' => 'Men Above 45', 'image' => 'body-men-above.jpg'],
-        ['title' => 'Whole Body Check', 'subtitle' => 'Men Below 45', 'image' => 'body-men-below.jpg'],
-        ['title' => 'Whole Body Check', 'subtitle' => 'Women Above 45', 'image' => 'body-women-above.jpg'],
-        ['title' => 'Whole Body Check', 'subtitle' => 'Women Below 45', 'image' => 'body-women-below.jpg'],
-        ['title' => 'General Health Check', 'subtitle' => 'Male Below 40', 'image' => 'general-male.jpg'],
+        ['title' => 'Executive Health Check', 'subtitle' => 'Male/Female', 'image' => 'executive.jpg', 'price' => 799.00, 'description' => 'Comprehensive executive screening including blood tests, ECG, and physician consult.'],
+        ['title' => 'Heart Check', 'subtitle' => 'For Men', 'image' => 'heart-men.jpg', 'price' => 499.00, 'description' => 'Cardiac profile and ECG focused package for men.'],
+        ['title' => 'Heart Check', 'subtitle' => 'For Women', 'image' => 'heart-women.jpg', 'price' => 499.00, 'description' => 'Cardiac profile and ECG focused package for women.'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Men Above 45', 'image' => 'body-men-above.jpg', 'price' => 699.00, 'description' => 'Extended panels and imaging for men above 45.'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Men Below 45', 'image' => 'body-men-below.jpg', 'price' => 599.00, 'description' => 'Comprehensive health checks for men below 45.'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Women Above 45', 'image' => 'body-women-above.jpg', 'price' => 699.00, 'description' => 'Extended panels and imaging for women above 45.'],
+        ['title' => 'Whole Body Check', 'subtitle' => 'Women Below 45', 'image' => 'body-women-below.jpg', 'price' => 599.00, 'description' => 'Comprehensive health checks for women below 45.'],
+        ['title' => 'General Health Check', 'subtitle' => 'Male Below 40', 'image' => 'general-male.jpg', 'price' => 299.00, 'description' => 'Basic health screening package.'],
         // Extra packages (hidden initially)
-        ['title' => 'Diabetes Care Package', 'subtitle' => '', 'image' => 'diabetes.jpg'],
-        ['title' => 'Cancer Screening Package', 'subtitle' => '', 'image' => 'cancer.jpg'],
-        ['title' => 'Senior Citizen Health Package', 'subtitle' => '', 'image' => 'senior.jpg'],
-        ['title' => 'Women Wellness Package', 'subtitle' => '', 'image' => 'women-wellness.jpg'],
+        ['title' => 'Diabetes Care Package', 'subtitle' => '', 'image' => 'diabetes.jpg', 'price' => 249.00, 'description' => 'Glucose tolerance, HbA1c and dietician consult.'],
+        ['title' => 'Cancer Screening Package', 'subtitle' => '', 'image' => 'cancer.jpg', 'price' => 999.00, 'description' => 'Comprehensive cancer screening panels and imaging.'],
+        ['title' => 'Senior Citizen Health Package', 'subtitle' => '', 'image' => 'senior.jpg', 'price' => 549.00, 'description' => 'Tailored senior checks including bone profile and cardiac tests.'],
+        ['title' => 'Women Wellness Package', 'subtitle' => '', 'image' => 'women-wellness.jpg', 'price' => 399.00, 'description' => 'Women-focused screening including gynecological tests.'],
       ];
     @endphp
 
     @foreach($packages as $index => $package)
       <div class="col-lg-3 col-md-4 col-sm-6 package-card {{ $index >= 8 ? 'd-none extra-package' : '' }}">
         <div class="card h-100 text-center shadow-sm package-card-bg">
-          <!-- Bigger square image -->
           <div class="image-square mx-auto mt-3">
             <img src="{{ asset('images/packages/'.$package['image']) }}" alt="{{ $package['title'] }}">
           </div>
           <div class="card-body">
             <h6 class="card-title mb-1 text-white">{{ $package['title'] }}</h6>
             @if($package['subtitle'])
-              <p class="text-light small mb-2">{{ $package['subtitle'] }}</p>
+              <p class="text-light small mb-1">{{ $package['subtitle'] }}</p>
             @endif
-            <a href="#" class="btn btn-outline-light btn-sm mt-2">See Package</a>
+            @if(!empty($package['description']))
+              <p class="text-light small mb-1">{{ $package['description'] }}</p>
+            @endif
+            <p class="fw-bold text-white mb-2">Price: ৳{{ number_format($package['price'], 2) }}</p>
+            <button class="btn btn-outline-light btn-sm mt-2 book-package-btn" 
+                    data-package='@json($package)'>Book Package</button>
           </div>
         </div>
       </div>
@@ -391,6 +503,277 @@
   });
 </script>
 
+<!-- Book Package Modal -->
+<div class="modal fade" id="bookPackageModal" tabindex="-1" aria-labelledby="bookPackageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url('/book-package') }}">
+        @csrf
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="bookPackageModalLabel">Book Package</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          @if(session('package_success'))
+            <div class="alert alert-success">{{ session('package_success') }}</div>
+          @endif
+          <input type="hidden" name="package_title" id="bk_package_title">
+          <input type="hidden" name="package_price" id="bk_package_price">
+
+          <div class="mb-2">
+            <label class="form-label">Package</label>
+            <div id="bk_package_name" class="fw-bold"></div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Amount</label>
+            <div id="bk_package_amount" class="fw-bold"></div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Preferred Date</label>
+            <input type="date" name="booking_date" class="form-control" required>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Preferred Time (optional)</label>
+            <input type="text" name="time_slot" class="form-control" placeholder="e.g. 10:00 - 11:00">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Notes (optional)</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Confirm Booking</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.book-package-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const pkg = JSON.parse(this.getAttribute('data-package'));
+        document.getElementById('bk_package_title').value = pkg.title;
+        document.getElementById('bk_package_price').value = pkg.price;
+        document.getElementById('bk_package_name').textContent = pkg.title;
+        document.getElementById('bk_package_amount').textContent = '৳' + Number(pkg.price).toFixed(2);
+        var modal = new bootstrap.Modal(document.getElementById('bookPackageModal'));
+        modal.show();
+      });
+    });
+  });
+</script>
+
+
+<!-- Patient Appointments Modal -->
+<div class="modal fade" id="patientAppointmentsModal" tabindex="-1" aria-labelledby="patientAppointmentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="patientAppointmentsModalLabel">My Appointments</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        {{-- Past appointments --}}
+        <h4>Past Appointments</h4>
+        <ul>
+          @forelse(Auth::user()->appointments ?? [] as $appointment)
+            <li>
+              {{ \Carbon\Carbon::parse($appointment->date)->format('l, d M Y') }}
+              ({{ $appointment->time_slot }})
+              with Dr. {{ $appointment->doctor->user->name }}
+            </li>
+          @empty
+            <li>No appointments yet.</li>
+          @endforelse
+        </ul>
+
+        {{-- Specialization list --}}
+        <h4 class="mt-4">Book New Appointment</h4>
+        <p>Select a specialization to see available doctors:</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          @foreach($specializations as $spec)
+            <form method="GET" action="{{ route('patient.doctors.bySpecialization', $spec) }}" class="d-inline">
+              <button type="submit" class="btn btn-primary btn-sm mb-2">{{ $spec }}</button>
+            </form>
+          @endforeach
+        </div>
+
+        {{-- Doctors list --}}
+        @if(session('doctors'))
+          <h4>Doctors for {{ session('selected_specialization') }}</h4>
+
+          @forelse(session('doctors') as $doctor)
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5>Dr. {{ $doctor->user->name }}</h5>
+                <p>Email: {{ $doctor->user->email }} | Phone: {{ $doctor->user->phone }}</p>
+
+                <ul>
+                  @php
+                    $days = collect(range(0,6))->map(fn($i) => now()->addDays($i));
+                  @endphp
+
+                  @foreach($days as $day)
+                    @php
+                      $weekday = $day->format('l');
+                      $schedule = $doctor->schedules->firstWhere('day_of_week', $weekday);
+                      $totalSlots = 0;
+                      if($schedule){
+                          $slots = $schedule->generateSlots();
+                          $bookedCount = \App\Models\Appointment::where('doctor_id',$doctor->id)
+                            ->where('date',$day->toDateString())
+                            ->count();
+                          $totalSlots = count($slots) - $bookedCount;
+                      }
+                    @endphp
+
+                    <li>
+                      {{ $day->format('l, d M Y') }}:
+                      @if($schedule)
+                        {{ $schedule->start_time }} - {{ $schedule->end_time }} |
+                        {{ $totalSlots }} slots available
+                        @if($totalSlots > 0)
+                          <form method="POST" action="{{ route('book.appointment', $doctor->id) }}">
+                            @csrf
+                            <input type="hidden" name="date" value="{{ $day->toDateString() }}">
+                            <input type="hidden" name="specialization" value="{{ session('selected_specialization') }}">
+                            <button type="submit" class="btn btn-sm btn-primary">Confirm Booking</button>
+                          </form>
+                        @endif
+                      @else
+                        No schedule
+                      @endif
+                    </li>
+                  @endforeach
+                </ul>
+              </div>
+            </div>
+          @empty
+            <p>No doctors found for specialization: {{ session('selected_specialization') }}</p>
+          @endforelse
+        @endif
+
+        {{-- Feedback messages --}}
+        @if(session('success'))
+          <div class="alert alert-success mt-3">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+          <div class="alert alert-danger mt-3">{{ session('error') }}</div>
+        @endif
+
+        @if ($errors->any())
+  <div class="alert alert-danger">
+    <ul>
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Blood Donor Modal -->
+<div class="modal fade" id="bloodDonorModal" tabindex="-1" aria-labelledby="bloodDonorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="bloodDonorModalLabel">Blood Donor System</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+
+        {{-- Feedback messages INSIDE modal --}}
+        @if(session('success'))
+          <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if(session('error'))
+          <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <!-- Register as Donor -->
+        <h5>Blood Donor Status</h5>
+
+        @php
+            $isDonor = \App\Models\Donor::where('user_id', auth()->id())->exists();
+        @endphp
+
+        @if(!$isDonor)
+            {{-- Show Be a Donor button only if not already a donor --}}
+            <form method="POST" action="{{ route('donors.be') }}">
+                @csrf
+                <button type="submit" class="btn btn-success">Be a Donor</button>
+            </form>
+        @else
+            {{-- Show Remove Donorship button only if already a donor --}}
+            <form method="POST" action="{{ route('donors.remove') }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger mt-2">Remove Donorship</button>
+            </form>
+        @endif
+
+
+        <hr class="my-4">
+
+        <!-- Search Donors -->
+        <h5>Search Donors</h5>
+        <form method="GET" action="{{ route('donors.search') }}">
+          <div class="row">
+            <div class="col-md-6">
+              <select name="blood_group" class="form-select" required>
+                @foreach(['A+','A-','B+','B-','O+','O-','AB+','AB-'] as $group)
+                  <option value="{{ $group }}" {{ (session('bloodGroup') == $group) ? 'selected' : '' }}>
+                    {{ $group }}
+                  </option>
+                @endforeach
+              </select>
+
+            </div>
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+
+        @if(session('donors'))
+          <h6 class="mt-3">Available Donors for {{ session('bloodGroup') }}</h6>
+          <table class="table table-striped">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th></tr></thead>
+            <tbody>
+              @forelse(session('donors') as $donor)
+                <tr>
+                  <td>{{ $donor->name }}</td>
+                  <td>{{ $donor->email }}</td>
+                  <td>{{ $donor->phone }}</td>
+                  <td>{{ $donor->address }}</td>
+                </tr>
+              @empty
+                <tr><td colspan="4">No donors found</td></tr>
+              @endforelse
+            </tbody>
+          </table>
+        @endif
+
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -434,6 +817,56 @@
         </div>
     </div>
 </footer>
+    
+
+{{-- Auto reopen modal after redirect --}}
+@if(session('openModal'))
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalId = @json(session('openModal'));
+    const modalEl = document.getElementById(modalId);
+    if (modalEl) {
+      new bootstrap.Modal(modalEl).show();
+    }
+  });
+</script>
+@endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const chatWindow = document.getElementById('chatWindow');
+  const askButton = document.getElementById('askButton');
+
+  askButton.addEventListener('click', function() {
+    const input = document.getElementById('symptomInput').value;
+    if (!input) return;
+
+    chatWindow.innerHTML += `<div><strong>You:</strong> ${input}</div>`;
+
+    fetch('/ai-symptom-checker', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: JSON.stringify({ message: input })
+    })
+    .then(res => {
+      if (!res.ok) return res.text().then(text => { throw new Error(text) });
+      return res.json();
+    })
+    .then(data => {
+      chatWindow.innerHTML += `<div><strong>AI:</strong> ${data.reply}</div>`;
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    })
+    .catch(err => {
+      chatWindow.innerHTML += `<div><strong>Error:</strong> ${err}</div>`;
+    });
+  });
+});
+</script>
+
+
 
 </body>
 </html>

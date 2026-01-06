@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2025 at 08:20 PM
+-- Generation Time: Jan 06, 2026 at 03:13 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,60 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `appointments`
+--
+
+CREATE TABLE `appointments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `doctor_id` bigint(20) UNSIGNED NOT NULL,
+  `patient_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `time_slot` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'booked',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`id`, `doctor_id`, `patient_id`, `date`, `time_slot`, `status`, `created_at`, `updated_at`) VALUES
+(6, 2, 12, '2026-01-07', '17:08:00 - 18:08:00', 'booked', '2026-01-05 17:47:44', '2026-01-05 17:47:44'),
+(7, 2, 12, '2026-01-11', '16:06:00 - 19:06:00', 'booked', '2026-01-05 17:47:47', '2026-01-05 17:47:47'),
+(8, 12, 12, '2026-01-07', '20:31:00 - 22:31:00', 'booked', '2026-01-05 19:32:33', '2026-01-05 19:32:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `package_title` varchar(255) NOT NULL,
+  `package_price` decimal(10,2) DEFAULT NULL,
+  `patient_id` bigint(20) UNSIGNED NOT NULL,
+  `booking_date` date DEFAULT NULL,
+  `time_slot` varchar(255) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `package_title`, `package_price`, `patient_id`, `booking_date`, `time_slot`, `amount`, `status`, `notes`, `created_at`, `updated_at`) VALUES
+(38, 'Whole Body Check', 699.00, 12, '2026-01-09', '45', 699.00, 'pending', NULL, '2026-01-05 18:29:01', '2026-01-05 18:29:01'),
+(39, 'Whole Body Check', 599.00, 12, '2026-01-10', '45', 599.00, 'pending', NULL, '2026-01-05 18:29:09', '2026-01-05 18:29:09');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cache`
 --
 
@@ -32,24 +86,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('laravel-cache-07860f9cd63dccfc1532af944cca5c03', 'i:1;', 1767194193),
-('laravel-cache-07860f9cd63dccfc1532af944cca5c03:timer', 'i:1767194193;', 1767194193),
-('laravel-cache-1b805eb6b08c5568faa909e141334cc3', 'i:1;', 1767127610),
-('laravel-cache-1b805eb6b08c5568faa909e141334cc3:timer', 'i:1767127610;', 1767127610),
-('laravel-cache-42d97fe4991e548b5d1ea6f44a903822', 'i:1;', 1767195756),
-('laravel-cache-42d97fe4991e548b5d1ea6f44a903822:timer', 'i:1767195756;', 1767195756),
-('laravel-cache-86d128012b59e1779de132496404b5a4', 'i:1;', 1767194971),
-('laravel-cache-86d128012b59e1779de132496404b5a4:timer', 'i:1767194971;', 1767194971),
-('laravel-cache-ahteshamibnemostofa@gmail.com|127.0.0.1', 'i:1;', 1767194971),
-('laravel-cache-ahteshamibnemostofa@gmail.com|127.0.0.1:timer', 'i:1767194971;', 1767194971),
-('laravel-cache-dc44958e29ffba8b810d21377ae366b5', 'i:1;', 1767128061),
-('laravel-cache-dc44958e29ffba8b810d21377ae366b5:timer', 'i:1767128061;', 1767128061);
 
 -- --------------------------------------------------------
 
@@ -62,6 +98,93 @@ CREATE TABLE `cache_locks` (
   `owner` varchar(255) NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctors`
+--
+
+CREATE TABLE `doctors` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `specialization` varchar(255) DEFAULT NULL,
+  `qualifications` varchar(255) DEFAULT NULL,
+  `license_number` varchar(255) DEFAULT NULL,
+  `years_experience` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `doctors`
+--
+
+INSERT INTO `doctors` (`id`, `user_id`, `specialization`, `qualifications`, `license_number`, `years_experience`, `created_at`, `updated_at`) VALUES
+(2, 10, 'Medicine', NULL, NULL, NULL, '2026-01-05 03:04:30', '2026-01-05 03:04:30'),
+(3, 17, 'Medicine', NULL, NULL, NULL, '2026-01-05 03:04:30', '2026-01-05 03:04:30'),
+(9, 23, 'Cardiology', NULL, NULL, NULL, '2026-01-05 07:05:58', '2026-01-05 07:05:58'),
+(10, 24, 'Neurology', NULL, NULL, NULL, '2026-01-05 07:08:26', '2026-01-05 07:08:26'),
+(11, 25, 'Orthopedics', NULL, NULL, NULL, '2026-01-05 11:06:00', '2026-01-05 11:06:00'),
+(12, 26, 'Oncologist', NULL, NULL, NULL, '2026-01-05 18:28:16', '2026-01-05 18:28:16'),
+(14, 29, 'Pediatrics', NULL, NULL, NULL, '2026-01-05 18:41:18', '2026-01-05 18:41:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `doctor_schedules`
+--
+
+CREATE TABLE `doctor_schedules` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `doctor_id` bigint(20) UNSIGNED NOT NULL,
+  `day_of_week` varchar(255) NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `doctor_schedules`
+--
+
+INSERT INTO `doctor_schedules` (`id`, `doctor_id`, `day_of_week`, `start_time`, `end_time`, `created_at`, `updated_at`) VALUES
+(3, 10, 'Friday', '16:47:00', '20:47:00', '2026-01-05 11:47:21', '2026-01-05 11:47:21'),
+(4, 10, 'Wednesday', '16:47:00', '17:47:00', '2026-01-05 11:47:53', '2026-01-05 11:47:53'),
+(5, 10, 'Sunday', '16:02:00', '17:02:00', '2026-01-05 12:02:22', '2026-01-05 12:02:22'),
+(7, 2, 'Sunday', '16:06:00', '19:06:00', '2026-01-05 12:06:13', '2026-01-05 12:06:13'),
+(8, 2, 'Wednesday', '17:08:00', '18:08:00', '2026-01-05 12:08:09', '2026-01-05 12:08:09'),
+(9, 2, 'Friday', '17:10:00', '22:10:00', '2026-01-05 12:10:10', '2026-01-05 12:10:10'),
+(11, 12, 'Wednesday', '20:31:00', '22:31:00', '2026-01-05 19:32:09', '2026-01-05 19:32:09'),
+(12, 12, 'Friday', '20:31:00', '22:31:00', '2026-01-05 19:32:09', '2026-01-05 19:32:09'),
+(13, 12, 'Sunday', '20:31:00', '22:31:00', '2026-01-05 19:32:09', '2026-01-05 19:32:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `donors`
+--
+
+CREATE TABLE `donors` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `blood_group` varchar(255) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `donors`
+--
+
+INSERT INTO `donors` (`id`, `user_id`, `name`, `email`, `phone`, `address`, `blood_group`, `status`, `created_at`, `updated_at`) VALUES
+(10, 12, 'nisha', 'n@example.com', '01621924444', 'Dhaka', 'O+', 'active', '2026-01-05 19:30:20', '2026-01-05 19:30:20');
 
 -- --------------------------------------------------------
 
@@ -139,7 +262,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2025_12_30_172246_add_profile_fields_to_users_table', 2),
 (7, '2025_12_30_172747_add_profile_fields_to_users_table', 2),
 (8, '2025_12_30_175015_add_extended_profile_fields_to_users_table', 3),
-(9, '2025_12_31_160143_add_status_and_role_to_users_table', 4);
+(9, '2025_12_31_160143_add_status_and_role_to_users_table', 4),
+(12, '2026_01_05_083445_create_doctors_table', 7),
+(13, '2026_01_05_094453_make_time_slot_nullable_in_appointments_table', 8),
+(14, '2026_01_05_150328_create_donors_table', 9),
+(15, '2026_01_05_151528_create_donors_table', 10),
+(16, '2026_01_05_071641_create_doctor_schedules_table', 11),
+(17, '2026_01_05_080909_create_appointments_table', 12),
+(18, '2026_01_06_000001_create_prescriptions_table', 13),
+(20, '2026_01_06_000002_create_bookings_table', 14);
 
 -- --------------------------------------------------------
 
@@ -172,10 +303,29 @@ CREATE TABLE `model_has_roles` (
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (1, 'App\\Models\\User', 2),
 (2, 'App\\Models\\User', 3),
-(3, 'App\\Models\\User', 4),
 (3, 'App\\Models\\User', 5),
 (3, 'App\\Models\\User', 6),
 (3, 'App\\Models\\User', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `packages`
+--
+
+CREATE TABLE `packages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `package_title` varchar(255) NOT NULL,
+  `package_price` decimal(10,2) DEFAULT NULL,
+  `patient_id` bigint(20) UNSIGNED NOT NULL,
+  `booking_date` date DEFAULT NULL,
+  `time_slot` varchar(255) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -202,6 +352,28 @@ CREATE TABLE `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `prescriptions`
+--
+
+CREATE TABLE `prescriptions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `doctor_id` bigint(20) UNSIGNED NOT NULL,
+  `patient_id` bigint(20) UNSIGNED NOT NULL,
+  `content` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `prescriptions`
+--
+
+INSERT INTO `prescriptions` (`id`, `doctor_id`, `patient_id`, `content`, `created_at`, `updated_at`) VALUES
+(3, 12, 12, 'Napa Extra Extended Ultra Pro Max', '2026-01-05 19:33:42', '2026-01-05 19:33:42');
 
 -- --------------------------------------------------------
 
@@ -257,7 +429,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('lLQ1RgWFGfdCzkWIqhYb3EEfPCUuqsE81MChDwas', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSnU2SXlGYlMzTVZac2tldkFzMWNJWm5teXBENTZzNWhoN0I1bnhRdCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi1kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6MTU6ImFkbWluLmRhc2hib2FyZCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1767208633);
+('Bhj2wdSdZeOdwzyD5wrylWZOamwWKFFBiCvQZEAq', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWVVJMHRsajE1cVRZOXBXRzdNb1pYM3hjY1J5Y3ZjRjZvbEw1Wmt6TiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9ib29raW5ncy9qc29uIjtzOjU6InJvdXRlIjtOO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1767665412);
 
 -- --------------------------------------------------------
 
@@ -296,18 +468,35 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `blood_group`, `address`, `phone`, `profile_picture`, `dob`, `gender`, `emergency_contact`, `insurance_provider`, `policy_number`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`, `status`, `role`) VALUES
 (2, 'Super Admin', 'admin@example.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$cQOXdHI6aTUaUTB9UWUepOh3uUlsjpQK/65e4pqCCSAFFl7nYwJ2G', NULL, NULL, NULL, NULL, '2025-12-30 02:11:02', '2025-12-31 10:42:58', 'approved', 'admin'),
-(3, 'Dr. Strange', 'doctor@example.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$HGziASanhQToEllUPX/lsOaW7Hf8PqZ/u7AGNLn2.Vo6YnbRCGKg2', NULL, NULL, NULL, NULL, '2025-12-30 02:11:02', '2025-12-31 10:43:20', 'approved', 'doctor'),
-(4, 'John Doe', 'patient@example.com', 'A-', 'Chapuliya', '01621924444', 'profile_pictures/qFAOOTjMWwVcj0iT1P5q0CwGZzztuD5PeozkdwgB.png', '2025-12-10', 'Female', '453534543', '435345', '54353', NULL, '$2y$12$jmlFveutjU.WEiFwz.eUiOJgjMUfpJrbxXqqppUAQPnxxywZy8sEu', NULL, NULL, NULL, NULL, '2025-12-30 02:11:02', '2025-12-31 10:43:33', 'approved', 'patient'),
 (10, 'GOLAM MOSTAFA', 'a@example.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$OiKSTAnnTQO4ia4Hb62W4eq3mUbpOENNKzaAdCKs4uzHd7P4Th4j2', NULL, NULL, NULL, NULL, '2025-12-31 11:40:14', '2025-12-31 11:41:17', 'approved', 'doctor'),
-(11, 'MOFIJUL ISLAM', 'ahteshamibnemostafa@gmail.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$ILCiVWGBI6R8cLhMURn34ucd06gFR8cO3msDgMAAM7fdK7zYGbX/S', NULL, NULL, NULL, NULL, '2025-12-31 11:40:42', '2025-12-31 11:41:22', 'approved', 'patient'),
-(12, 'nisha', 'n@example.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$8yvD1OXDVJZ6TeZEV9Kg2uN6yK4LT3xWVFeO3HJjtvuD2TZtDuRHW', NULL, NULL, NULL, NULL, '2025-12-31 11:40:59', '2025-12-31 11:41:20', 'approved', 'patient'),
+(12, 'nisha', 'n@example.com', 'O+', 'Dhaka', '01621924444', NULL, '2026-01-01', 'Female', '435345', '34534', '345534', NULL, '$2y$12$8yvD1OXDVJZ6TeZEV9Kg2uN6yK4LT3xWVFeO3HJjtvuD2TZtDuRHW', NULL, NULL, NULL, NULL, '2025-12-31 11:40:59', '2026-01-05 09:54:56', 'approved', 'patient'),
 (14, 'Mostafa', 'dfs@gmail.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$wBLhB1mVcOgjjmCGfO5DxOqmtb2JzEbrCj44yRGhM01qw753VodN6', NULL, NULL, NULL, NULL, '2025-12-31 11:57:07', '2025-12-31 11:57:11', 'approved', 'patient'),
-(16, 'gaja', 'gaja@gaja.com', NULL, NULL, '12123', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$Hb.UoRNrHXLbi39OafivUu1n/HGROEmzcLJFz5ZP8IBMfGipuH1tO', NULL, NULL, NULL, NULL, '2025-12-31 13:12:21', '2025-12-31 13:17:13', 'approved', 'patient'),
-(17, 'masud', 'masud@masud.com', NULL, NULL, '2313', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$j5pGKQkqfX2Bzc8oVZKNLOk2abyLrWjkx1ktZzrTAOGULtaGPia2O', NULL, NULL, NULL, NULL, '2025-12-31 13:12:53', '2025-12-31 13:17:12', 'approved', 'doctor');
+(17, 'masud', 'masud@masud.com', NULL, NULL, '2313', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$j5pGKQkqfX2Bzc8oVZKNLOk2abyLrWjkx1ktZzrTAOGULtaGPia2O', NULL, NULL, NULL, NULL, '2025-12-31 13:12:53', '2025-12-31 13:17:12', 'approved', 'doctor'),
+(23, 'MOFIJUL ISLAM', 'ura@g.com', NULL, NULL, '32112323', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$0/w5zzsJGFeYTI232z329u0oFl0LrMxJm2HQgkiuqykFG9zIJjrkK', NULL, NULL, NULL, NULL, '2026-01-05 07:05:58', '2026-01-05 07:05:58', 'approved', 'doctor'),
+(24, 'AHTESHAM IBNE MOSTAFA', 'ahteshamibnemostofa@gmail.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$00j43I9bHha2mA7rmzjPluHLio6RA3QRTvB7ABcOD9A5AXqHGGm8y', NULL, NULL, NULL, NULL, '2026-01-05 07:08:26', '2026-01-05 07:08:26', 'approved', 'doctor'),
+(25, 'Kuddus ALi', 'ali@example.com', NULL, NULL, '342343', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$LKyaddSgYVCYNRJqwV0eNeOE8LluT9ZZRTqa6jXpsDxF3cKybqlbW', NULL, NULL, NULL, NULL, '2026-01-05 11:06:00', '2026-01-05 11:06:00', 'approved', 'doctor'),
+(26, 'Strange', 'doctor@example.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$eYnk0fN0AcqfF3G6dwMrIOoTrMfuL7KD/BcGqHDQektgB8KKrCRNy', NULL, NULL, NULL, NULL, '2026-01-05 18:28:16', '2026-01-05 18:28:16', 'approved', 'doctor'),
+(29, 'Kobiraj', 'kobi@raj.com', NULL, NULL, '45345', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$tAZ3rku4rFfXVbG8KL.kmu5R2CgOLAG0Y.nEh/f2vriv3hWnk1EnG', NULL, NULL, NULL, NULL, '2026-01-05 18:41:18', '2026-01-05 18:41:18', 'approved', 'doctor'),
+(30, 'Mostafa', 'fdggfdgf@dsfds.com', NULL, NULL, '01621924444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '$2y$12$dLEopmZ1YrW88NXYrRdQN.ctWSLo0rrXbR6HI1h4fACoI9e2e5sv.', NULL, NULL, NULL, NULL, '2026-01-05 19:27:50', '2026-01-05 19:27:50', 'pending', 'patient');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointments_doctor_id_foreign` (`doctor_id`),
+  ADD KEY `appointments_patient_id_foreign` (`patient_id`);
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bookings_patient_id_foreign` (`patient_id`);
 
 --
 -- Indexes for table `cache`
@@ -320,6 +509,28 @@ ALTER TABLE `cache`
 --
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
+
+--
+-- Indexes for table `doctors`
+--
+ALTER TABLE `doctors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `doctors_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `doctor_schedules_doctor_id_foreign` (`doctor_id`);
+
+--
+-- Indexes for table `donors`
+--
+ALTER TABLE `donors`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `donors_email_unique` (`email`),
+  ADD KEY `donors_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -362,6 +573,13 @@ ALTER TABLE `model_has_roles`
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
+-- Indexes for table `packages`
+--
+ALTER TABLE `packages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `packages_patient_id_foreign` (`patient_id`);
+
+--
 -- Indexes for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
@@ -373,6 +591,14 @@ ALTER TABLE `password_reset_tokens`
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
+
+--
+-- Indexes for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `prescriptions_doctor_id_foreign` (`doctor_id`),
+  ADD KEY `prescriptions_patient_id_foreign` (`patient_id`);
 
 --
 -- Indexes for table `roles`
@@ -408,6 +634,36 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `appointments`
+--
+ALTER TABLE `appointments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `doctors`
+--
+ALTER TABLE `doctors`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `donors`
+--
+ALTER TABLE `donors`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -423,13 +679,25 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `packages`
+--
+ALTER TABLE `packages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -441,11 +709,42 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD CONSTRAINT `appointments_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appointments_patient_id_foreign` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `bookings_patient_id_foreign` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `doctors`
+--
+ALTER TABLE `doctors`
+  ADD CONSTRAINT `doctors_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `doctor_schedules`
+--
+ALTER TABLE `doctor_schedules`
+  ADD CONSTRAINT `doctor_schedules_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `donors`
+--
+ALTER TABLE `donors`
+  ADD CONSTRAINT `donors_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `model_has_permissions`
@@ -458,6 +757,19 @@ ALTER TABLE `model_has_permissions`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `packages`
+--
+ALTER TABLE `packages`
+  ADD CONSTRAINT `packages_patient_id_foreign` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `prescriptions`
+--
+ALTER TABLE `prescriptions`
+  ADD CONSTRAINT `prescriptions_doctor_id_foreign` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `prescriptions_patient_id_foreign` FOREIGN KEY (`patient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `role_has_permissions`
